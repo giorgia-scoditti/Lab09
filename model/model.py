@@ -39,6 +39,16 @@ class Model:
             --> Ogni PuntoInteresse ha un set di Escursioni.
         """
         # TODO
+        relazioni = EscursioneDAO.get_escursioni_punti_interesse()
+        for relazione in relazioni:
+            id_escursione = relazione["id_escursione"]
+            id_punto = relazione["id_punto"]
+
+            escursione = self.escursioni_map[id_escursione]
+            punto = self.punti_interesse_map[id_punto]
+
+            escursione.punti_interesse.add(punto)
+            punto.escursioni.add(escursione)
 
     def genera_pacchetto(self, id_parco: str, max_giorni: int = None, max_budget: float = None):
         """
@@ -63,3 +73,9 @@ class Model:
         """ Algoritmo di ricorsione che deve trovare il pacchetto che massimizza il voto complessivo dei visitatori"""
 
         # TODO: è possibile cambiare i parametri formali della funzione se ritenuto opportuno
+        if start_index >= len(escursioni):
+            if valore_corrente > self._valore_ottimo:
+                self._valore_ottimo = valore_corrente
+                self._pacchetto_ottimo = pacchetto_parziale.copy()
+                self._costo = costo_corrente
+            return
